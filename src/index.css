@@ -1,0 +1,153 @@
+@import "tailwindcss";
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  min-height: 100%;
+}
+
+body {
+  margin: 0;
+  overflow: hidden;
+  background: #fff7f8;
+}
+
+.love-bg {
+  position: relative;
+  min-height: 100vh;
+  overflow: hidden;
+  background:
+    radial-gradient(1200px 720px at -5% -20%, rgba(255, 218, 230, 0.7) 0%, rgba(255, 218, 230, 0) 72%),
+    radial-gradient(1000px 680px at 105% -5%, rgba(255, 202, 217, 0.6) 0%, rgba(255, 202, 217, 0) 70%),
+    radial-gradient(900px 620px at 50% 112%, rgba(255, 223, 207, 0.58) 0%, rgba(255, 223, 207, 0) 74%),
+    linear-gradient(165deg, #fffefe 0%, #fff4f7 52%, #ffeff3 100%);
+}
+
+.love-blob,
+.love-hearts,
+.love-haze,
+.love-vignette {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.love-blob {
+  border-radius: 999px;
+  filter: blur(36px);
+}
+
+.love-blob-a {
+  inset: auto;
+  width: 34vmax;
+  height: 34vmax;
+  left: -7vmax;
+  top: -8vmax;
+  background: radial-gradient(circle at 35% 35%, rgba(255, 255, 255, 0.95) 0%, rgba(255, 197, 216, 0.68) 40%, rgba(255, 197, 216, 0) 76%);
+  animation: drift-a 22s ease-in-out infinite;
+}
+
+.love-blob-b {
+  inset: auto;
+  width: 38vmax;
+  height: 38vmax;
+  right: -10vmax;
+  top: -8vmax;
+  background: radial-gradient(circle at 50% 40%, rgba(255, 255, 255, 0.9) 0%, rgba(255, 186, 208, 0.62) 42%, rgba(255, 186, 208, 0) 78%);
+  animation: drift-b 25s ease-in-out infinite;
+}
+
+.love-blob-c {
+  inset: auto;
+  width: 42vmax;
+  height: 42vmax;
+  left: 28%;
+  bottom: -17vmax;
+  background: radial-gradient(circle at 50% 38%, rgba(255, 255, 255, 0.75) 0%, rgba(255, 213, 194, 0.56) 42%, rgba(255, 213, 194, 0) 78%);
+  animation: drift-c 24s ease-in-out infinite;
+}
+
+.love-hearts {
+  background-image:
+    radial-gradient(circle at 12% 22%, rgba(255, 179, 204, 0.45) 0 0.22%, transparent 0.38%),
+    radial-gradient(circle at 22% 74%, rgba(255, 189, 212, 0.38) 0 0.24%, transparent 0.4%),
+    radial-gradient(circle at 38% 16%, rgba(255, 203, 221, 0.45) 0 0.2%, transparent 0.36%),
+    radial-gradient(circle at 60% 76%, rgba(255, 189, 215, 0.4) 0 0.22%, transparent 0.38%),
+    radial-gradient(circle at 79% 19%, rgba(255, 173, 200, 0.45) 0 0.24%, transparent 0.4%),
+    radial-gradient(circle at 91% 58%, rgba(255, 202, 221, 0.42) 0 0.2%, transparent 0.36%);
+  opacity: 0.32;
+  filter: blur(0.4px);
+  animation: float-hearts 26s ease-in-out infinite;
+}
+
+.love-haze {
+  background:
+    radial-gradient(500px 300px at 30% 36%, rgba(255, 255, 255, 0.5) 0%, rgba(255, 255, 255, 0) 70%),
+    radial-gradient(560px 340px at 70% 64%, rgba(255, 255, 255, 0.45) 0%, rgba(255, 255, 255, 0) 72%);
+  opacity: 0.85;
+}
+
+.love-vignette {
+  background: radial-gradient(circle at 50% 45%, rgba(255, 255, 255, 0) 42%, rgba(120, 24, 56, 0.08) 100%);
+}
+
+.rain-canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0.95;
+}
+
+.rain-mist {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(120% 65% at 50% 105%, rgba(150, 168, 195, 0.3) 0%, rgba(150, 168, 195, 0) 66%),
+    linear-gradient(180deg, rgba(22, 31, 48, 0.08) 0%, rgba(22, 31, 48, 0.28) 100%);
+  mix-blend-mode: screen;
+}
+
+@keyframes drift-a {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+  50% {
+    transform: translate3d(1.8vmax, 1vmax, 0) scale(1.04);
+  }
+}
+
+@keyframes drift-b {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+  50% {
+    transform: translate3d(-1.6vmax, 1.1vmax, 0) scale(1.045);
+  }
+}
+
+@keyframes drift-c {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+  50% {
+    transform: translate3d(0, -1.3vmax, 0) scale(1.04);
+  }
+}
+
+@keyframes float-hearts {
+  0%,
+  100% {
+    transform: translateY(0.7%);
+  }
+  50% {
+    transform: translateY(-0.7%);
+  }
+}
