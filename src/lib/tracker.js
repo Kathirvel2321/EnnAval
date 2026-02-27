@@ -2,6 +2,7 @@ const VISIT_KEY = 'love-story-visit-id-v1'
 const API_BASE =
   import.meta.env.VITE_API_BASE ||
   (import.meta.env.DEV ? 'http://localhost:8787' : '')
+const FORMSPREE_OPEN_ENDPOINT = import.meta.env.VITE_FORMSPREE_OPEN_ENDPOINT || ''
 
 if (import.meta.env.PROD && !API_BASE) {
   // eslint-disable-next-line no-console
@@ -47,6 +48,39 @@ const post = async (path, payload) => {
   }
 }
 
+const postFormspreeOpen = async ({ visitId, path }) => {
+  if (!FORMSPREE_OPEN_ENDPOINT) return false
+  try {
+    const openedAtLocal = new Intl.DateTimeFormat('en-IN', {
+      timeZone: 'Asia/Kolkata',
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit',
+      hour: '2-digit',
+      minute: '2-digit',
+      second: '2-digit',
+      hour12: true,
+    }).format(new Date())
+
+    const response = await fetch(FORMSPREE_OPEN_ENDPOINT, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Accept: 'application/json',
+      },
+      body: JSON.stringify({
+        type: 'website_opened',
+        visit_id: visitId,
+        opened_at_local: openedAtLocal,
+        path: path || '/',
+      }),
+    })
+    return response.ok
+  } catch {
+    return false
+  }
+}
+
 export const trackSiteOpen = async () => {
   if (openTrackedInRuntime) return true
   openTrackedInRuntime = true
@@ -55,12 +89,16 @@ export const trackSiteOpen = async () => {
     openTrackedInRuntime = false
     return false
   }
+  const openPath = typeof window !== 'undefined' ? window.location.pathname : '/'
+  // Backup confirmation via Formspree (best effort, no DB dependency).
+  postFormspreeOpen({ visitId, path: openPath }).catch(() => {})
+
   const ok = await post('/api/view/open', {
     visitId,
     phase: 'entry',
     key: 'website_opened',
     value: 'true',
-    extra: { path: typeof window !== 'undefined' ? window.location.pathname : '' },
+    extra: { path: openPath },
   })
   if (!ok) openTrackedInRuntime = false
   return ok

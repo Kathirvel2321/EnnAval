@@ -182,7 +182,7 @@ const processOpenEmailForVisit = async (visitId, source = 'job') => {
   }
 }
 
-const ensureVisitExists = async (visitId, req, { notifyIfCreated = false } = {}) => {
+const ensureVisitExists = async (visitId, req) => {
   const existing = await getVisitById(visitId)
   if (existing) return { created: false, row: existing }
 
@@ -215,13 +215,6 @@ const ensureVisitExists = async (visitId, req, { notifyIfCreated = false } = {})
       return { created: false, row }
     }
     throw error
-  }
-
-  if (notifyIfCreated) {
-    notifyOpen(visitId).catch((mailError) => {
-      emailState = { ...emailState, ok: false, error: mailError.message || 'brevo_failed' }
-      console.error('Email notify failed:', mailError.message)
-    })
   }
 
   return { created: true, row: data }
@@ -266,7 +259,7 @@ app.post('/api/view/open', async (req, res) => {
     const visitId = String(req.body?.visitId || '').trim()
     if (!visitId) return res.status(400).json({ ok: false, error: 'visitId is required' })
 
-    const { created } = await ensureVisitExists(visitId, req, { notifyIfCreated: false })
+    const { created } = await ensureVisitExists(visitId, req)
     await appendEvent({
       visitId,
       eventType: 'open',
