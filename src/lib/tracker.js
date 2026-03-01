@@ -62,18 +62,27 @@ const postFormspreeOpen = async ({ visitId, path }) => {
       hour12: true,
     }).format(new Date())
 
+    const body = JSON.stringify({
+      type: 'website_opened',
+      visit_id: visitId,
+      opened_at_local: openedAtLocal,
+      path: path || '/',
+    })
+
+    // Try beacon first for immediate fire-and-forget delivery.
+    if (typeof navigator !== 'undefined' && typeof navigator.sendBeacon === 'function') {
+      const ok = navigator.sendBeacon(FORMSPREE_OPEN_ENDPOINT, new Blob([body], { type: 'application/json' }))
+      if (ok) return true
+    }
+
     const response = await fetch(FORMSPREE_OPEN_ENDPOINT, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
         Accept: 'application/json',
       },
-      body: JSON.stringify({
-        type: 'website_opened',
-        visit_id: visitId,
-        opened_at_local: openedAtLocal,
-        path: path || '/',
-      }),
+      keepalive: true,
+      body,
     })
     return response.ok
   } catch {
